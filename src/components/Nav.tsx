@@ -78,6 +78,18 @@ export function Nav() {
           open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
         )}
       >
+        <button
+          type="button"
+          aria-label="Close menu"
+          onClick={() => setOpen(false)}
+          className={cn(
+            "absolute right-5 top-5 flex h-12 w-12 items-center justify-center rounded-full bg-on-b/10 text-on-b ring-1 ring-on-b/15 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] sm:right-8 sm:top-8",
+            open ? "scale-100 opacity-100" : "scale-90 opacity-0",
+          )}
+        >
+          <X weight="light" className="h-6 w-6" />
+        </button>
+
         <div className="flex flex-col items-center gap-7">
           {nav.map((item, i) => (
             <a
