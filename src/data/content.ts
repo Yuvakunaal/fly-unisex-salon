@@ -12,12 +12,11 @@ export const business = {
   city: "Hyderabad",
   addressLine: "Near Street Mary's College, Yousufguda, Hyderabad, Telangana",
 
-  // PLACEHOLDER — replace with the real 10-digit number (with country code for wa.me)
-  phoneDisplay: "+91 90000 00000",
-  phoneTel: "tel:+919000000000",
-  whatsapp: "https://wa.me/919000000000",
+  phoneDisplay: "+91 97018 81430",
+  phoneTel: "tel:+919701881430",
+  whatsapp: "https://wa.me/919701881430",
 
-  instagram: "https://www.instagram.com/fly_unisex_salon/",
+  instagram: "https://www.instagram.com/flyunisexsalon.raj430/",
   justdial:
     "https://www.justdial.com/Hyderabad/Fly-Unisex-Salon-Near-Street-Marys-College-Yousufguda/040PXX40-XX40-230819003920-H5X6_BZDET",
   mapsDirections:
