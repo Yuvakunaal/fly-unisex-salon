@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Fraunces", "Noto Serif Devanagari", "Noto Serif Telugu", ui-serif, Georgia, serif;
+  --font-body: "General Sans", "Noto Sans Devanagari", "Noto Sans Telugu", ui-sans-serif, system-ui, sans-serif;
+
+  /* fixed — do not flip with theme (used for gradient endpoints / text sitting on accent fills) */
+  --color-deep: #15120e;
+  /* fixed light plate — the real logo's linework only reads on a light backdrop, in either theme */
+  --color-paper-fixed: #f7f1e6;
+
+  /* semantic, theme-aware surface pairs — values below are the light theme */
+  --color-surface-a: #f7f1e6;
+  --color-surface-a-soft: #efe3cd;
+  --color-surface-b: #15120e;
+  --color-surface-b-soft: #1e1912;
+  --color-on-a: #15120e;
+  --color-on-b: #f7f1e6;
+
+  /* brand pair lifted from the real Fly logo mark: marigold wing + magenta wing */
+  --color-gold: #f2a627;
+  --color-gold-soft: #f7c368;
+  --color-coral: #c31d5e;
+  --color-teal: #1f3d3a;
+
+  --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root[data-theme="dark"] {
+  --color-surface-a: #1c1712;
+  --color-surface-a-soft: #241e16;
+  --color-surface-b: #0a0908;
+  --color-surface-b-soft: #121009;
+  --color-on-a: #f3ecdd;
+  --color-on-b: #f3ecdd;
+
+  --color-gold: #f5b854;
+  --color-gold-soft: #f8cd82;
+  --color-coral: #e2437e;
+  --color-teal: #33625c;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/*
+ * Devanagari/Telugu vowel signs and conjuncts extend well beyond Latin
+ * ascender/descender bounds. Our display headings use a tight Latin-tuned
+ * line-height (as low as 0.95) that clips those glyphs — this widens it
+ * specifically for hi/te content, keyed off the `lang` attribute that
+ * LanguageContext sets on <html>. Higher specificity than a single Tailwind
+ * utility class, so no !important needed.
+ */
+:lang(hi) h1,
+:lang(te) h1,
+:lang(hi) h2,
+:lang(te) h2,
+:lang(hi) h3,
+:lang(te) h3,
+:lang(hi) .quote-text,
+:lang(te) .quote-text {
+  line-height: 1.35;
+}
+
+body {
+  margin: 0;
+  background: var(--color-surface-a);
+  color: var(--color-on-a);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* smooth theme switch for anything not already carrying its own transition utility */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 0.5s;
+  transition-timing-function: var(--ease-out-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-deep);
+}
+
+/* fixed, pointer-events-none grain overlay — never on scrolling containers */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/*
+ * Short landscape phones (e.g. a phone rotated sideways) have desktop-range
+ * *width* — enough to trigger md: breakpoint styles like the 72px heading
+ * and two-column grid — but phone-range *height*, so that content badly
+ * overflows the viewport. Width-only breakpoints can't see this; this is
+ * keyed on viewport height instead. #top/its children use ID/element
+ * selectors so they win over the Tailwind utility classes without !important.
+ */
+@media (max-height: 500px) and (orientation: landscape) {
+  #top {
+    min-height: auto;
+    padding-top: 7rem;
+    padding-bottom: 2rem;
+  }
+  #top h1 {
+    font-size: 2.25rem;
+    margin-top: 1.25rem;
+  }
+  #top [data-hero-sub] {
+    margin-top: 1rem;
+  }
+  #top .mt-10 {
+    margin-top: 1.25rem;
+  }
+  #top [data-hero-card] {
+    display: none;
+  }
+}
+
+/* theme toggle — circular reveal via the View Transitions API, origin set from JS per click */
+::view-transition-old(root) {
+  animation: none;
+}
+::view-transition-new(root) {
+  animation: theme-reveal 0.65s var(--ease-out-soft);
+}
+
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0% at var(--theme-toggle-x, 50%) var(--theme-toggle-y, 50%));
+  }
+  to {
+    clip-path: circle(150% at var(--theme-toggle-x, 50%) var(--theme-toggle-y, 50%));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
